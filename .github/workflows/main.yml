@@ -11,32 +11,20 @@ on:
 
 jobs:
   build:
-    runs-on: macos-latest
-    
+    runs-on: macos-latest  # Chạy trên máy ảo macOS mới nhất
+
     steps:
+      - name: Checkout code
+        uses: actions/checkout@v3  # Kiểm tra mã nguồn từ repository
+
+      - name: Set up Node.js 18.12.1
+        uses: actions/setup-node@v3  # Cài đặt Node.js
+        with:
+          node-version: '18.12.1'  # Chỉ định phiên bản Node.js bạn muốn cài đặt
+
+      - name: Install dependencies
+        run: npm install  # Chạy npm install để cài đặt các phụ thuộc từ package.json
 
       - name: Run tests
         run: |
-          echo "Running tests..."
-          # Thêm lệnh để chạy bài kiểm tra của bạn ở đây, ví dụ:
-          # pytest
-  test:
-    runs-on: macos-latest
-    
-    steps:
-
-      - name: Run tests
-        run: |
-          echo "Running tests..."
-          # Thêm lệnh để chạy bài kiểm tra của bạn ở đây, ví dụ:
-          # pytest
-  noti:
-    runs-on: macos-latest
-    
-    steps:
-
-      - name: Run tests
-        run: |
-          echo "Running tests..."
-          # Thêm lệnh để chạy bài kiểm tra của bạn ở đây, ví dụ:
-          # pytest
+          echo "Regression Testing ................................................"
