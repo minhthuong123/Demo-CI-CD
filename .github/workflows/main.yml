@@ -1,12 +1,50 @@
-name: CI Pipeline
+.e2e_runners: 
+  tags:
+    - $runner
 
-on: [push]
+stages: 
+  - build
+  - test
+  - test2
+  - report
+  - send-report
+  - notify-failure
 
-jobs:
-  test:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
-      - name: Run Python script
-        run: echo "Hello CI/CD"
+.regression-test: &regression-test
+ rules:
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+      when: manual
+      allow_failure: true
+    - if: $CI_PIPELINE_SOURCE == "schedule"
+      when: manual
+    - when: manual
+  stage: test
+ extends: 
+    - .e2e_runners
+ image: kegmil/node14-jdk1.8-chrome-firefox-py3
+  before_script: 
+    - nvm use 18.12.1
+    - node -v
+    - npm install
+  script:
+    - echo "Regression Testing ................................................"
+    - "eval env=ci_\"$browser\"_\"$env\" npm run s regression || FAILED=true"
+
+  allow_failure: true
+  artifacts:
+    when: always
+    paths:
+      - allure-report
+      - reports/allure-results
+    expire_in: 1 week
+    reports:
+      junit: ./reports/xml/*.xml
+  retry:
+    max: 2
+    when:
+      - runner_system_failure
+      - stuck_or_timeout_failure
+      - script_failure
+      - unknown_failure
+      - job_execution_timeout
+  environment: $env
