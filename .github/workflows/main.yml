@@ -1,41 +1,54 @@
-name: CI Pipeline
-
-on: [push]
-
+.e2e_runners: 
+  tags:
+    - $runner
+# Định nghĩa các giai đoạn (stages) của pipeline
 stages:
-  - build
-  - test
-  - report
-  - send-report
-  - notify-failure
+  - build          # Giai đoạn build
+  - test           # Giai đoạn test
+  - test2          # Giai đoạn test bổ sung
+  - report         # Giai đoạn tạo báo cáo
+  - send-report    # Giai đoạn gửi báo cáo
+  - notify-failure # Giai đoạn thông báo khi thất bại
 
+# Job 'build': Xây dựng dự án
 build:
   stage: build
   script:
-    - echo "Building the project..."
-    - # Thêm lệnh build của bạn vào đây
+    - echo "Building the project..."  # Thêm lệnh xây dựng dự án của bạn ở đây
+    # Ví dụ: npm install hoặc lệnh khác để build dự án của bạn
 
+# Job 'test': Chạy các bài kiểm tra
 test:
   stage: test
   script:
-    - echo "Running tests..."
-    - # Thêm lệnh chạy test của bạn vào đây
+    - echo "Running tests..."  # Thêm lệnh để chạy bài kiểm tra của bạn ở đây
+    # Ví dụ: npm test hoặc lệnh chạy test của bạn
 
+# Job 'test2': Chạy kiểm tra bổ sung (nếu có)
+test2:
+  stage: test2
+  script:
+    - echo "Running additional tests..."  # Lệnh chạy kiểm tra bổ sung
+    # Ví dụ: npm run test:additional hoặc lệnh khác
+
+# Job 'report': Tạo báo cáo
 report:
   stage: report
   script:
-    - echo "Generating the report..."
-    - # Thêm lệnh tạo báo cáo của bạn vào đây
+    - echo "Generating the report..."  # Lệnh để tạo báo cáo
+    # Thêm các lệnh tạo báo cáo của bạn ở đây
 
+# Job 'send-report': Gửi báo cáo
 send-report:
   stage: send-report
   script:
-    - echo "Sending the report..."
-    - # Thêm lệnh gửi báo cáo của bạn vào đây
+    - echo "Sending the report..."  # Lệnh gửi báo cáo
+    # Ví dụ: lệnh gửi email hoặc tải báo cáo lên một nơi nào đó
 
+# Job 'notify-failure': Thông báo khi pipeline thất bại
 notify-failure:
   stage: notify-failure
   script:
-    - echo "Notifying failure..."
-    - # Thêm lệnh thông báo lỗi của bạn vào đây
-  when: on_failure  # Chỉ chạy khi pipeline thất bại
+    - echo "Notifying failure..."  # Lệnh thông báo lỗi
+    # Ví dụ: gửi thông báo qua email, Slack, v.v.
+  when: on_failure  # Chạy chỉ khi pipeline thất bại
