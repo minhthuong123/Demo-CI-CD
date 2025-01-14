@@ -1,0 +1,59 @@
+{
+  "name": "km-web-ui-automation",
+  "version": "1.0.0",
+  "description": "Recommend has install on local machine `JDK 1.8+` (require to start Selenium Server), `Node.JS` (Install at least v12.16.1 or higher and < Node.js v16)\r , `python>3` to use sync mode",
+  "main": "index.js",
+  "scripts": {
+    "wdio": "wdio run ./wdio.conf.js",
+    "test": "wdio wdio.conf.js",
+    "all": "wdio wdio.conf.js",
+    "f": "wdio wdio.conf.js --spec",
+    "s": "wdio wdio.conf.js --suite",
+    "t": "wdio wdio.conf.js --cucumberOpts.tagExpression",
+    "prepaire-service": "bash ./resources/prepaire-service.sh",
+    "allure-deploy": "netlify deploy --dir=allure-report --functions=kegmil-report --prod || FAILED=true",
+    "delete-report-duplication": "node src/core/utils/DeleteReportDuplication.js && allure generate ./reports/allure-results --clean",
+    "delete-report-failed": "node src/core/utils/CompressAllureResults.js && node src/core/utils/DeleteReportFailed.js && allure generate ./reports/allure-results --clean",
+    "id-report-failed": "allure generate ./reports/allure-results --clean && node src/core/utils/GetIDReportFailed.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@gitlab.kegmil.co:front-end/km-web-ui-automation.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@wdio/allure-reporter": "^8.21.0",
+    "@wdio/cli": "^8.22.1",
+    "@wdio/cucumber-framework": "^8.20.3",
+    "@wdio/local-runner": "^8.20.5",
+    "@wdio/logger": "^8.16.17",
+    "@wdio/reporter": "^8.20.0",
+    "appium": "^2.0.0-beta.59",
+    "appium-uiautomator2-driver": "^2.13.0",
+    "archiver": "^7.0.1",
+    "axios": "^1.6.0",
+    "csv-parser": "^3.0.0",
+    "webdriverio": "^8.20.4",
+    "xlsx": "^0.18.5"
+  },
+  "devDependencies": {
+    "@types/webdriverio": "^5.0.0",
+    "@wdio/appium-service": "^8.6.9",
+    "@wdio/junit-reporter": "^8.20.0",
+    "@wdio/spec-reporter": "^8.20.0",
+    "allure-commandline": "^2.24.1",
+    "chai": "^4.3.10",
+    "chromedriver": "^111.0.0",
+    "fs-extra": "^11.1.1",
+    "moment": "^2.29.4",
+    "request": "^2.88.2",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.4.5",
+    "wdio-chromedriver-service": "^8.1.1",
+    "wdio-cucumberjs-json-reporter": "^5.1.7",
+    "wdio-wait-for": "^3.0.2",
+    "winston": "^3.11.0"
+  }
+}
