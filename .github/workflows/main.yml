@@ -1,6 +1,4 @@
-.e2e_runners: 
-  tags:
-    - $runner
+
 # Định nghĩa các giai đoạn (stages) của pipeline
 stages:
   - build          # Giai đoạn build
