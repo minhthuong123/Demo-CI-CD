@@ -1,50 +1,41 @@
-.e2e_runners: 
-  tags:
-    - $runner
+name: CI Pipeline
 
-stages: 
+on: [push]
+
+stages:
   - build
   - test
-  - test2
   - report
   - send-report
   - notify-failure
 
-.regression-test: &regression-test
- rules:
-    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
-      when: manual
-      allow_failure: true
-    - if: $CI_PIPELINE_SOURCE == "schedule"
-      when: manual
-    - when: manual
-  stage: test
- extends: 
-    - .e2e_runners
- image: kegmil/node14-jdk1.8-chrome-firefox-py3
-  before_script: 
-    - nvm use 18.12.1
-    - node -v
-    - npm install
+build:
+  stage: build
   script:
-    - echo "Regression Testing ................................................"
-    - "eval env=ci_\"$browser\"_\"$env\" npm run s regression || FAILED=true"
+    - echo "Building the project..."
+    - # Thêm lệnh build của bạn vào đây
 
-  allow_failure: true
-  artifacts:
-    when: always
-    paths:
-      - allure-report
-      - reports/allure-results
-    expire_in: 1 week
-    reports:
-      junit: ./reports/xml/*.xml
-  retry:
-    max: 2
-    when:
-      - runner_system_failure
-      - stuck_or_timeout_failure
-      - script_failure
-      - unknown_failure
-      - job_execution_timeout
-  environment: $env
+test:
+  stage: test
+  script:
+    - echo "Running tests..."
+    - # Thêm lệnh chạy test của bạn vào đây
+
+report:
+  stage: report
+  script:
+    - echo "Generating the report..."
+    - # Thêm lệnh tạo báo cáo của bạn vào đây
+
+send-report:
+  stage: send-report
+  script:
+    - echo "Sending the report..."
+    - # Thêm lệnh gửi báo cáo của bạn vào đây
+
+notify-failure:
+  stage: notify-failure
+  script:
+    - echo "Notifying failure..."
+    - # Thêm lệnh thông báo lỗi của bạn vào đây
+  when: on_failure  # Chỉ chạy khi pipeline thất bại
