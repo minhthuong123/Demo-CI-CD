@@ -11,7 +11,7 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: macos-latest
     
     steps:
 
@@ -21,7 +21,7 @@ jobs:
           # Thêm lệnh để chạy bài kiểm tra của bạn ở đây, ví dụ:
           # pytest
   test:
-    runs-on: ubuntu-latest
+    runs-on: macos-latest
     
     steps:
 
@@ -31,7 +31,7 @@ jobs:
           # Thêm lệnh để chạy bài kiểm tra của bạn ở đây, ví dụ:
           # pytest
   noti:
-    runs-on: ubuntu-latest
+    runs-on: macos-latest
     
     steps:
 
