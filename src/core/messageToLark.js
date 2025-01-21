@@ -37,7 +37,7 @@ const uploadImage = async (APP_ACCESS_TOKEN) => {
   const uploadImageUrl = 'https://open.larksuite.com/open-apis/im/v1/images';
   const form = new FormData();
   form.append('image_type', 'message'); // Loại hình ảnh (message hoặc avatar)
-  form.append('image', fs.createReadStream('./IMG.jpg')); // Đường dẫn tới tệp hình ảnh
+  form.append('image', fs.createReadStream('./ArobidAutomationFlowChart.jpg')); // Đường dẫn tới tệp hình ảnh
 
   try {
     const response = await axios.post(uploadImageUrl, form, {

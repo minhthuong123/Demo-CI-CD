@@ -24,8 +24,9 @@ jobs:
 
       - name: Install dependencies
         run: npm install  # Chạy npm install để cài đặt các phụ thuộc từ package.json
-
-      - name: Run tests
+      - name: Run test case
+        run: npm run f L-01
+      - name: Send notifications
         run: |
           echo "Regression Testing ................................................"
           node src/core/messageToLark.js  # Chạy file JavaScript của bạn
