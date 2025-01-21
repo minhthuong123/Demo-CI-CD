@@ -5,7 +5,7 @@ const CONFIG = {
     env: 'stag', // dev | stag | prod
     tenant: 'autos', // (stag|autos , prod|autoy)
     browser: 'chrome', // chrome | firefox | safari 
-    headless: false, // safari not support headless
+    headless: true, // safari not support headless
     maxInstances: 3,
     wdioLogLevel: 'silent', //trace | debug | info | warn | error | silent
     logger: false,
