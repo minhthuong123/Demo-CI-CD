@@ -13,8 +13,11 @@
     "prepaire-service": "bash ./resources/prepaire-service.sh",
     "allure-deploy": "netlify deploy --dir=allure-report --functions=kegmil-report --prod || FAILED=true",
     "delete-report-duplication": "node src/core/utils/DeleteReportDuplication.js && allure generate ./reports/allure-results --clean",
-    "delete-report-failed": "node src/core/utils/CompressAllureResults.js && node src/core/utils/DeleteReportFailed.js && allure generate ./reports/allure-results --clean",
-    "id-report-failed": "allure generate ./reports/allure-results --clean && node src/core/utils/GetIDReportFailed.js"
+    "delete-report-failed": "npm run store-name-report && node src/core/utils/CompressAllureResults.js && node src/core/utils/DeleteReportFailed.js && allure generate ./reports/allure-results --clean",
+    "id-report-failed": "allure generate ./reports/allure-results --clean && node src/core/utils/GetIDReportFailed.js",
+    "store-name-report": "allure generate ./reports/allure-results --clean && node src/core/utils/StoreNameReport.js",
+    "check-miss-test-case": "allure generate ./reports/allure-results --clean && node src/core/utils/CheckMissTestCase.js",
+    "delete-report-id": "node src/core/utils/DeleteReportByID.js && allure generate ./reports/allure-results --clean"
   },
   "repository": {
     "type": "git",
