@@ -21,9 +21,7 @@ jobs:
         run: npm install
 
       - name: Run test case
-        run: |
-        echo "Run test case................................................................"
-        npm run f L-01
+        run: npm run f L-01
 
   # deploy_report:
   #   runs-on: macos-latest
