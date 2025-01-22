@@ -2,31 +2,64 @@ name: CI Pipeline
 
 # Sự kiện trigger pipeline
 on:
-  push:         # Chạy khi có hành động push lên repository
-    branches:
-      - main     # Chỉ trigger khi push lên nhánh 'main'
-  pull_request:  # Chạy khi có pull request tạo vào nhánh 'main'
-    branches:
-      - main
+  workflow_dispatch:  # Cho phép trigger thủ công
 
 jobs:
-  build:
-    runs-on: macos-latest  # Chạy trên máy ảo macOS mới nhất
+  Smoke:
+    runs-on: macos-latest
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3  # Kiểm tra mã nguồn từ repository
+        uses: actions/checkout@v3
 
       - name: Set up Node.js 18.12.1
-        uses: actions/setup-node@v3  # Cài đặt Node.js
+        uses: actions/setup-node@v3
         with:
-          node-version: '18.12.1'  # Chỉ định phiên bản Node.js bạn muốn cài đặt
+          node-version: '18.12.1'
 
       - name: Install dependencies
-        run: npm install  # Chạy npm install để cài đặt các phụ thuộc từ package.json
+        run: npm install
+
       - name: Run test case
+        echo "Run test case................................................................"
         run: npm run f L-01
+
+  # deploy_report:
+  #   runs-on: macos-latest
+  #   needs: Smoke  # Chỉ chạy sau khi Smoke thành công
+
+  #   steps:
+  #     - name: Checkout code
+  #       uses: actions/checkout@v3
+
+  #     - name: Set up Node.js 18.12.1
+  #       uses: actions/setup-node@v3
+  #       with:
+  #         node-version: '18.12.1'
+
+  #     - name: Install dependencies
+  #       run: npm install
+
+  #     - name: Deploy report
+  #       run: npm run deploy
+
+  send_notifications_to_lark:
+    runs-on: macos-latest
+    needs: [Smoke]  # Chỉ chạy sau khi Smoke và deploy_report thành công
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Node.js 18.12.1
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18.12.1'
+
+      - name: Install dependencies
+        run: npm install
+
       - name: Send notifications
         run: |
-          echo "Regression Testing ................................................"
-          node src/core/messageToLark.js  # Chạy file JavaScript của bạn
+          echo "Send notifications................................................................"
+          node src/core/messageToLark.js
