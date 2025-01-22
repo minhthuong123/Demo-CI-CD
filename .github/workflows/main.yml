@@ -26,8 +26,10 @@ jobs:
       - name: Upload test report
         uses: actions/upload-artifact@v3  # Upload report làm artifact
         with:
-          name: allure-report  # Tên của artifact
-          path: reports/allure-results    # Đường dẫn tới file hoặc thư mục bạn muốn upload
+          name: allure-reports  # Tên artifact (có thể tuỳ chỉnh)
+          path: |
+            allure-report
+            reports/allure-results
 
   deploy_report:
     runs-on: macos-latest
@@ -46,13 +48,13 @@ jobs:
         run: npm install
 
       - name: Download test report
-        uses: actions/download-artifact@v3  # Tải artifact từ job `Smoke`
+        uses: actions/download-artifact@v3
         with:
-          name: allure-report   # Tên của artifact cần tải
+          name: allure-reports  # Tên của artifact đã upload
       - name: Deploy report
         run: |
           echo "Deploying report..."
-          cat reports/allure-results/favicon.ico  # Hiển thị nội dung report (demo)
+          cat allure-report/favicon.ico  
 
   send_notifications_to_lark:
     runs-on: macos-latest
