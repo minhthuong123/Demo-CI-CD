@@ -24,7 +24,7 @@ jobs:
         run: npm run f L-01
 
       - name: Upload test report
-        uses: actions/upload-artifact@v3  # Upload report làm artifact
+        uses: actions/upload-artifact@v4  # Upload report làm artifact
         with:
           name: allure-reports  # Tên artifact (có thể tuỳ chỉnh)
           path: |
@@ -48,7 +48,7 @@ jobs:
         run: npm install
 
       - name: Download test report
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: allure-reports  # Tên của artifact đã upload
       - name: Deploy report
