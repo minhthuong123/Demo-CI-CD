@@ -50,9 +50,9 @@ jobs:
         with:
           name: allure-report   # Tên của artifact cần tải
       - name: Deploy report
-          run: |
-              echo "Deploying report..."
-              cat reports/allure-results/favicon.ico  # Hiển thị nội dung report (demo)
+        run: |
+          echo "Deploying report..."
+          cat reports/allure-results/favicon.ico  # Hiển thị nội dung report (demo)
 
   send_notifications_to_lark:
     runs-on: macos-latest
