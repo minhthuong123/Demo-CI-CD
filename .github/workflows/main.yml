@@ -9,10 +9,12 @@ jobs:
     runs-on: self-hosted
 
     steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
       - name: Setup environment
-        run: |
-          git clone $GITHUB_REPOSITORY .         
-          nvm install 18.12.1
+        run: |       
+          node -v || nvm install 18.12.1
           npm install
 
       - name: Run test case
