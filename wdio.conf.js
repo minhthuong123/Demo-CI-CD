@@ -211,9 +211,7 @@ exports.config = {
     //   Reports Configurations
     // ========================
     reporters: [
-        // ["spec", {
-        //     onlyFailures: true,
-        // },],
+
         ['cucumberjs-json', {
             jsonFolder: '.tmp/json/',
             language: 'en',
@@ -228,7 +226,7 @@ exports.config = {
             reportedEnvironmentVars: {
                 'BROWSER': process.env.BROWSER,
                 'ENV': process.env.ENV,
-                'TENANT': process.env.TENANT,
+                // 'TENANT': process.env.TENANT,
             }
         }],
         ['junit', {
@@ -248,15 +246,11 @@ exports.config = {
         if (CONFIG.clearAllureResultFolder) {
             FileUtil.deleteFolder(consts.ALLURE_RESULTS_ROOT)
         }   
-        // FileUtil.deleteFolder(consts.LOGS_ROOT)
-        // FileUtil.deleteFolder(consts.ALLURE_REPORT_ROOT)
-        // removeSync('.tmp/')
-        // removeSync('./reports/screenshot/*.png')
         console.log('■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■')
         console.log('                       START TESTING')
         console.log('. TEST INFORMATION:')
         console.log('. Test Runner   :', process.env.RUNNER)
-        console.log('. Test Env      :', process.env.ENV +'      | Tenant: '+ process.env.TENANT)
+        console.log('. Test Env      :', process.env.ENV)
         console.log('. Test Browser  :', process.env.BROWSER + '    | Headless: ' + process.env.HEADLESS)
         if (process.env.KEGMIL_URL) {
             console.log('. URL           :', process.env.KEGMIL_URL)
@@ -274,84 +268,46 @@ exports.config = {
         }
         let file_run_name = path_names[path_names.length - 1]
         global.file_run_name = file_run_name
-        // console.log('. Spec running:', file_run_name)
     },
 
     before: async function (test, context, options, capabilities) {
-        // console.log('. SessionID:', options.sessionId)
-        // console.log('. browserVersion: ' + options.capabilities.browserName + '-' + options.capabilities.browserVersion)
 
         if (process.env.RUNNER == 'ci' || process.env.HEADLESS == true) {
             browser.setWindowSize(1920, 1520)
         }
 
-        // reset app
-        if (CONFIG.user_app === 'mobile_app') {
-            // const packageName = 'com.kegmil.field';
-            // const mainActivity = 'com.kegmil.field.MainActivity';
-            // try {
-            //     const driverInstance = await driver.getInstance('Mobile_App'); 
-            //     const isInstalled = await driverInstance.isAppInstalled(packageName);               
-            //     if (isInstalled ) {
-            //         await driverInstance.removeApp(packageName);
-            //     }
-            //     await driverInstance.installApp(path_app_release_android);
-
-            //     if (CONFIG.platform === 'Android') {
-            //         await driverInstance.startActivity(packageName, mainActivity);
-            //     } else {
-            //         await driverInstance.activateApp(packageName);
-            //     }
-            // } catch (error) {
-            // }
-        } else {
             browser.maximizeWindow()
-        }
     },
     afterHook: function (test, context) {
-        // allure_report.addEnvironment("BROWSER", process.env.BROWSER);
-        // allure_report.addEnvironment("ENV", process.env.ENV);
-        // allure_report.addTestId("" + file_run_name);
     },
 
     after: function () {
-        // browser.deleteSession()
-        // console.log('. Delete Session')
+
     },
 
     afterSession: function (options, capabilities) {
-        // console.log('. After Session')
     },
 
     /**
      * Cucumber Hooks
      */
     beforeFeature: function (uri, feature) {
-        // console.log('\tFeature:', feature.name)
     },
 
     beforeScenario: function (world) {
-        // console.log('\t   Scenario:', world.pickle.name + ' is running .......')
     },
 
     beforeStep: function (step, scenario) {
-        // console.log('\t\t->', step.text)
     },
 
     afterStep: async function (step, scenario, result) {
         if (!(result.passed)) {
             console.log('\t\t-> Fail on step:', step.text)
-            // console.log('. Take a screenshot for fails step ...')
             await browser.saveScreenshot('./reports/screenshot/' + file_run_name + '.png')
         }
     },
     
     afterScenario: async function (world, result) {
-        // Delete job on Mobile and remove app
-        if (CONFIG.user_app == 'mobile_app') {
-            // await ApiJobFlows.deleteJobNameApi()
-            await driver.getInstance('Mobile_App').removeApp('com.kegmil.field')
-        }
     },
 
     afterFeature: function (uri, feature) {
@@ -387,29 +343,5 @@ exports.config = {
             })
         }
     },
-
-    // autoCompileOpts: {
-    //     // To disable auto-loading entirely set this to false.
-    //     autoCompile: true,
-    //     tsNodeOpts: {
-    //         transpileOnly: true,
-    //         project: 'tsconfig.json'
-    //     },
-
-    //     requireModule: ['@babel/register'],
-    //     "compilerOptions": {
-    //         "types": [
-    //             "node",
-    //             "webdriverio/sync",
-    //         ]
-    //     },
-    //     //
-    //     // If @babel/register is installed, you can customize how options are passed to it here:
-    //     // Any valid @babel/register config option is allowed.
-    //     // https://babeljs.io/docs/en/babel-register#specifying-options
-    //     babelOpts: {
-    //         ignore: []
-    //     },
-    // },
     
 }

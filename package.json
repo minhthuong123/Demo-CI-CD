@@ -1,5 +1,5 @@
 {
-  "name": "km-web-ui-automation",
+  "name": "arobid-web-ui-automation",
   "version": "1.0.0",
   "description": "Recommend has install on local machine `JDK 1.8+` (require to start Selenium Server), `Node.JS` (Install at least v12.16.1 or higher and < Node.js v16)\r , `python>3` to use sync mode",
   "main": "index.js",
