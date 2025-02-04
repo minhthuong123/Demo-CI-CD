@@ -1,1 +1,29 @@
+# Shared between .npmignore and .gitignore
+.idea/
+.vscode/
+*.DS_Store
+*.swp
+
+# Build artifacts
 node_modules/
+package-lock.json
+package.json
+
+# Running artifacts
+allure-report/
+reports/allure-results/
+reports/screenshot/
+reports/xml/
+reports/logs/
+jsconfig.json
+.tmp/json/*
+
+# Local folder
+# .netlify
+node_modules/selenium-standalone/.selenium/chromedriver/latest-x64/chromedriver
+node_modules/selenium-standalone/.selenium/chromedriver/latest-x64/chromedriver.zip
+node_modules/selenium-standalone/.selenium/geckodriver/0.29.1-x64/geckodriver
+node_modules/selenium-standalone/.selenium/geckodriver/0.29.1-x64/geckodriver.gz
+
+# Local Netlify folder
+.netlify
