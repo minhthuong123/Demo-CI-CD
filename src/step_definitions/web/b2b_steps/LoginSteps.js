@@ -8,9 +8,18 @@ const Control = require('../../../core/Control');
 
 // Login Flow
 
-When(/^I login Arobid page$/, async function () {
+Given(/^I open B2B$/, async function () {
   await LoginPage.openLoginUrl()
-  await Control._sleep_in_seconds(5)
+  await Control._sleep_in_seconds(1)
+});
+
+When(/^I click vào button Login$/, async function () {
+  await Control._sleep_in_seconds(1)
   await LoginPage.clickOnLoginButton()
-  await Assert.true(await LoginPage.isTextLoginOnHeaderDisplayed('Login'))
+});
+
+Then(/^I see text "([^"]*)" on header$/, async function (text) {
+  await Control._sleep_in_seconds(1)
+  await Assert.true(await LoginPage.isTextLoginOnHeaderDisplayed(text))
+  await Control._sleep_in_seconds(1)
 });

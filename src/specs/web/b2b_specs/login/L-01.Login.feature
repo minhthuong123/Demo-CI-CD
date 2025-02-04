@@ -3,4 +3,6 @@ Feature: Login thành công
 
     @L-01
     Scenario: [L-01][WA] Login Thành công
-        Given I login Arobid page
+        Given I open B2B
+        And I click vào button Login
+        Then I see text "Login" on header
