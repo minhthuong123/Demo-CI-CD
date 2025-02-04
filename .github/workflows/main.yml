@@ -22,7 +22,7 @@ jobs:
 
       - name: Run test case
         id: error  # Đặt ID cho bước này để tham chiếu đến sau
-        run: npm run f L-01 || FAILED=true  # Lệnh chạy test, nếu lỗi thì tiếp tục
+        run: eval env=ci_\"chrome\"_\"stag\" npm run f L-01 || FAILED=true  # Lệnh chạy test, nếu lỗi thì tiếp tục
 
       # - name: Send failure notification to Lark
       #   if: failure()  # Chỉ chạy bước này khi job thất bại
