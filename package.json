@@ -38,6 +38,8 @@
     "archiver": "^7.0.1",
     "axios": "^1.6.0",
     "csv-parser": "^3.0.0",
+    "puppeteer": "^24.1.1",
+    "puppeteer-core": "^24.1.1",
     "webdriverio": "^8.20.4",
     "xlsx": "^0.18.5"
   },

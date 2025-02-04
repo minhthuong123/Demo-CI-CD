@@ -1,6 +1,32 @@
 const axios = require('axios');
 const fs = require('fs');
 const FormData = require('form-data');
+const puppeteer = require('puppeteer');
+
+(async () => {
+  const browser = await puppeteer.launch();
+  const page = await browser.newPage();
+
+  // Thiết lập viewport ở kích thước chuẩn (ví dụ 1280x800)
+  await page.setViewport({ width: 1280, height: 800 });
+
+  // Điều hướng trình duyệt đến URL của trang
+  await page.goto('https://67a2327132bf520ff640ec4f--monumental-gingersnap-ec0aa5.netlify.app/', { waitUntil: 'networkidle2' });
+
+  // Chờ một phần tử cụ thể hoặc thêm thời gian chờ nếu cần
+  await page.waitForSelector('body');  // Chờ đến khi body xuất hiện
+
+  // Chờ thêm 5 giây để đảm bảo dữ liệu đã được load hoàn toàn
+  await new Promise(resolve => setTimeout(resolve, 5000));
+
+  // Chụp ảnh màn hình mà không thay đổi độ phân giải của trang
+  await page.screenshot({ path: 'netlify-page-screenshot.png', fullPage: true });
+
+  console.log('Screenshot saved as netlify-page-screenshot.png');
+
+  await browser.close();
+})();
+
 
 // Thay YOUR_APP_ID và YOUR_APP_SECRET bằng thông tin thật của bạn
 const APP_ID = 'cli_a7f5b0d4d2f85010';
@@ -37,7 +63,7 @@ const uploadImage = async (APP_ACCESS_TOKEN) => {
   const uploadImageUrl = 'https://open.larksuite.com/open-apis/im/v1/images';
   const form = new FormData();
   form.append('image_type', 'message'); // Loại hình ảnh (message hoặc avatar)
-  form.append('image', fs.createReadStream('./ArobidAutomationFlowChart.jpg')); // Đường dẫn tới tệp hình ảnh
+  form.append('image', fs.createReadStream('./netlify-page-screenshot.png')); // Đường dẫn tới tệp hình ảnh
 
   try {
     const response = await axios.post(uploadImageUrl, form, {
@@ -61,47 +87,67 @@ const uploadImage = async (APP_ACCESS_TOKEN) => {
   }
 };
 
-// Hàm gửi tin nhắn chứa hình ảnh
-const sendImageMessage = async (APP_ACCESS_TOKEN, imageKey) => {
+// Hàm gửi tin nhắn chứa hình ảnh và văn bản
+const sendImageAndTextMessage = async (APP_ACCESS_TOKEN, imageKey, text) => {
   const sendMessageUrl = 'https://open.larksuite.com/open-apis/bot/v2/hook/e34bb71e-0465-4049-88fb-b1c73b628a1d';
   
   // Thay "user_id" bằng ID người nhận thực tế hoặc ID của nhóm bạn muốn gửi
   const messagePayload = {
     "user_id": "user_id_của_bạn", // Thay bằng user_id của người nhận hoặc chat_id của nhóm
-    "msg_type": "image",
+    "msg_type": "text", // Chọn loại tin nhắn là văn bản
     "content": {
-      "image_key": imageKey
+      "text": text,  // Nội dung văn bản bạn muốn gửi
+    },
+  };
+
+  const imagePayload = {
+    "user_id": "user_id_của_bạn", // Thay bằng user_id của người nhận hoặc chat_id của nhóm
+    "msg_type": "image",  // Tin nhắn loại hình ảnh
+    "content": {
+      "image_key": imageKey, // Thêm image_key vào tin nhắn hình ảnh
     }
   };
 
   try {
-    const response = await axios.post(sendMessageUrl, messagePayload, {
+    
+
+    // Gửi tin nhắn hình ảnh
+    const imageResponse = await axios.post(sendMessageUrl, imagePayload, {
       headers: {
         'Authorization': `Bearer ${APP_ACCESS_TOKEN}`,
         'Content-Type': 'application/json'
       },
     });
 
-    if (response.data.code === 0) {
-      console.log('Tin nhắn đã được gửi thành công!');
+    // Gửi tin nhắn văn bản
+    const textResponse = await axios.post(sendMessageUrl, messagePayload, {
+      headers: {
+        'Authorization': `Bearer ${APP_ACCESS_TOKEN}`,
+        'Content-Type': 'application/json'
+      },
+    });
+
+    if (textResponse.data.code === 0 && imageResponse.data.code === 0) {
+      console.log('Tin nhắn văn bản và hình ảnh đã được gửi thành công!');
     } else {
-      console.log('Lỗi khi gửi tin nhắn:', response.data.msg);
+      console.log('Lỗi khi gửi tin nhắn:', textResponse.data.msg || imageResponse.data.msg);
     }
   } catch (error) {
     console.error('Lỗi khi gửi tin nhắn:', error.message);
   }
 };
 
-// Hàm tải lên hình ảnh và gửi tin nhắn
-const uploadAndSendImage = async () => {
+// Hàm tải lên hình ảnh và gửi tin nhắn văn bản và hình ảnh
+const uploadAndSendImageAndText = async () => {
   const token = await getAppAccessToken();
   if (token) {
     const imageKey = await uploadImage(token);  // Tải lên hình ảnh và lấy image_key
     if (imageKey) {
-      await sendImageMessage(token, imageKey);  // Gửi tin nhắn chứa hình ảnh
+      const text = 'Report page: https://67a2327132bf520ff640ec4f--monumental-gingersnap-ec0aa5.netlify.app/';  // Văn bản bạn muốn gửi
+      await sendImageAndTextMessage(token, imageKey, text);  // Gửi tin nhắn chứa hình ảnh và văn bản
     }
   }
 };
 
 // Chạy hàm chính
-uploadAndSendImage();
+uploadAndSendImageAndText();
