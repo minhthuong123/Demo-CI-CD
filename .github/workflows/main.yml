@@ -43,22 +43,24 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Set up Node.js 18.12.1
-        uses: actions/setup-node@v3
-        with:
-          node-version: '18.12.1'
-
-      - name: Install dependencies
-        run: npm install
-
       - name: Download test report
         uses: actions/download-artifact@v4
         with:
           name: allure-results  # Tên của artifact đã upload
           path: reports/allure-results
-      - name: Deploy report
+
+      - name: Generate Allure Report
         run: |
-          ls  ./reports
+          npm install -g allure-commandline --save-dev
+          allure generate allure-results --clean -o allure-report
+
+      - name: Deploy to Netlify
+        run: |
+          npm install -g netlify-cli
+          netlify deploy --prod --dir=allure-report --site $NETLIFY_SITE_ID --auth $NETLIFY_AUTH_TOKEN
+        env:
+          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+          NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
 
   send_notifications_to_lark:
     runs-on: self-hosted
