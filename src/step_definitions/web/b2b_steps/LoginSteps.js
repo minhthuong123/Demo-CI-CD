@@ -19,7 +19,7 @@ When(/^I click vào button Login$/, async function () {
 });
 
 Then(/^I see text "([^"]*)" on header$/, async function (text) {
-  await Control._sleep_in_seconds(1)
+  await Control._sleep_in_seconds(5)
   await Assert.true(await LoginPage.isTextLoginOnHeaderDisplayed(text))
   await Control._sleep_in_seconds(1)
 });
