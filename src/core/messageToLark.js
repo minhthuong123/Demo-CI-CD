@@ -3,50 +3,19 @@ const fs = require('fs');
 const FormData = require('form-data');
 const puppeteer = require('puppeteer');
 
-(async () => {
-  const browser = await puppeteer.launch();
-  const page = await browser.newPage();
-
-  // Thiết lập viewport ở kích thước chuẩn (ví dụ 1280x800)
-  await page.setViewport({ width: 1280, height: 800 });
-
-  // Điều hướng trình duyệt đến URL của trang
-  await page.goto('https://67a2327132bf520ff640ec4f--monumental-gingersnap-ec0aa5.netlify.app/', { waitUntil: 'networkidle2' });
-
-  // Chờ một phần tử cụ thể hoặc thêm thời gian chờ nếu cần
-  await page.waitForSelector('body');  // Chờ đến khi body xuất hiện
-
-  // Chờ thêm 5 giây để đảm bảo dữ liệu đã được load hoàn toàn
-  await new Promise(resolve => setTimeout(resolve, 5000));
-
-  // Chụp ảnh màn hình mà không thay đổi độ phân giải của trang
-  await page.screenshot({ path: 'netlify-page-screenshot.png', fullPage: true });
-
-  console.log('Screenshot saved as netlify-page-screenshot.png');
-
-  await browser.close();
-})();
-
-
-// Thay YOUR_APP_ID và YOUR_APP_SECRET bằng thông tin thật của bạn
-const APP_ID = 'cli_a7f5b0d4d2f85010';
-const APP_SECRET = 'APIV0EVE31v2hY6TSvbSXxMTirZNoZgO';
-
-// Địa chỉ endpoint để lấy App Access Token
-const url = 'https://open.larksuite.com/open-apis/auth/v3/app_access_token/internal/';
-
-// Hàm lấy App Access Token
+// Định nghĩa hàm lấy App Access Token
 const getAppAccessToken = async () => {
+  const APP_ID = 'cli_a7f5b0d4d2f85010';
+  const APP_SECRET = 'APIV0EVE31v2hY6TSvbSXxMTirZNoZgO';
+  const url = 'https://open.larksuite.com/open-apis/auth/v3/app_access_token/internal/';
+
   try {
-    // Gửi yêu cầu POST để lấy token
     const response = await axios.post(url, {
       app_id: APP_ID,
       app_secret: APP_SECRET,
     });
 
-    // Kiểm tra xem response có chứa dữ liệu hợp lệ không
     if (response.data && response.data.code === 0) {
-      // Lấy app_access_token từ response đúng cách
       const appAccessToken = response.data.app_access_token;
       console.log('App Access Token:', appAccessToken);
       return appAccessToken;
@@ -91,7 +60,6 @@ const uploadImage = async (APP_ACCESS_TOKEN) => {
 const sendImageAndTextMessage = async (APP_ACCESS_TOKEN, imageKey, text) => {
   const sendMessageUrl = 'https://open.larksuite.com/open-apis/bot/v2/hook/e34bb71e-0465-4049-88fb-b1c73b628a1d';
   
-  // Thay "user_id" bằng ID người nhận thực tế hoặc ID của nhóm bạn muốn gửi
   const messagePayload = {
     "user_id": "user_id_của_bạn", // Thay bằng user_id của người nhận hoặc chat_id của nhóm
     "msg_type": "text", // Chọn loại tin nhắn là văn bản
@@ -109,8 +77,6 @@ const sendImageAndTextMessage = async (APP_ACCESS_TOKEN, imageKey, text) => {
   };
 
   try {
-    
-
     // Gửi tin nhắn hình ảnh
     const imageResponse = await axios.post(sendMessageUrl, imagePayload, {
       headers: {
@@ -143,11 +109,38 @@ const uploadAndSendImageAndText = async () => {
   if (token) {
     const imageKey = await uploadImage(token);  // Tải lên hình ảnh và lấy image_key
     if (imageKey) {
-      const text = 'Report page: https://67a2327132bf520ff640ec4f--monumental-gingersnap-ec0aa5.netlify.app/';  // Văn bản bạn muốn gửi
+      const text = 'Report page: https://monumental-gingersnap-ec0aa5.netlify.app/';  // Văn bản bạn muốn gửi
       await sendImageAndTextMessage(token, imageKey, text);  // Gửi tin nhắn chứa hình ảnh và văn bản
     }
   }
 };
 
 // Chạy hàm chính
-uploadAndSendImageAndText();
+const captureAndUploadScreenshot = async () => {
+  const browser = await puppeteer.launch();
+  const page = await browser.newPage();
+
+  // Thiết lập viewport ở kích thước chuẩn (ví dụ 1280x800)
+  await page.setViewport({ width: 1280, height: 800 });
+
+  // Điều hướng trình duyệt đến URL của trang
+  await page.goto('https://monumental-gingersnap-ec0aa5.netlify.app/', { waitUntil: 'networkidle2' });
+
+  // Chờ đến khi body xuất hiện
+  await page.waitForSelector('body'); 
+
+  // Chờ thêm 5 giây để đảm bảo dữ liệu đã được load hoàn toàn
+  await new Promise(resolve => setTimeout(resolve, 5000));
+
+  // Chụp ảnh màn hình
+  await page.screenshot({ path: 'netlify-page-screenshot.png', fullPage: true });
+  console.log('Screenshot saved as netlify-page-screenshot.png');
+
+  await browser.close();
+
+  // Tiếp tục upload và gửi tin nhắn
+  await uploadAndSendImageAndText();
+};
+
+// Gọi hàm chính
+captureAndUploadScreenshot();
