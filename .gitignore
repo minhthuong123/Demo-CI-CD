@@ -13,7 +13,7 @@ package.json
 allure-report/
 reports/allure-results/
 reports/screenshot/
-reports/xml/*
+# reports/xml/*
 reports/logs/
 jsconfig.json
 .tmp/json/*
