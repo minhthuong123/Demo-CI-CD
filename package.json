@@ -8,13 +8,7 @@
     "test": "wdio wdio.conf.js",
     "all": "wdio wdio.conf.js",
     "f": "wdio wdio.conf.js --spec",
-    "s": "wdio wdio.conf.js --suite",
-    "t": "wdio wdio.conf.js --cucumberOpts.tagExpression",
-    "prepaire-service": "bash ./resources/prepaire-service.sh"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git@gitlab.kegmil.co:front-end/km-web-ui-automation.git"
+    "s": "wdio wdio.conf.js --suite"
   },
   "keywords": [],
   "author": "",

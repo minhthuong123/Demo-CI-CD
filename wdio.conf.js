@@ -94,8 +94,6 @@ exports.config = {
   specs: [CONFIG.features],
   suites: CONFIG.suites,
 
-  // Patterns to exclude.
-  exclude: [CONFIG.exclude],
 
   // =====================================
   // Service Configurations & Capabilities
