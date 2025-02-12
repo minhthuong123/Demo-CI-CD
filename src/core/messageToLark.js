@@ -12,7 +12,7 @@ const getAppAccessToken = async () => {
   try {
     const response = await axios.post(url, {
       app_id: APP_ID,
-      app_secret: APP_SECRET,
+      app_secret: APP_SECRET
     });
 
     if (response.data && response.data.code === 0) {
@@ -38,8 +38,8 @@ const uploadImage = async (APP_ACCESS_TOKEN) => {
     const response = await axios.post(uploadImageUrl, form, {
       headers: {
         ...form.getHeaders(),
-        'Authorization': `Bearer ${APP_ACCESS_TOKEN}`,
-      },
+        Authorization: `Bearer ${APP_ACCESS_TOKEN}`
+      }
     });
 
     console.log('Upload response:', response.data);
@@ -59,20 +59,20 @@ const uploadImage = async (APP_ACCESS_TOKEN) => {
 // Hàm gửi tin nhắn chứa hình ảnh và văn bản
 const sendImageAndTextMessage = async (APP_ACCESS_TOKEN, imageKey, text) => {
   const sendMessageUrl = 'https://open.larksuite.com/open-apis/bot/v2/hook/e34bb71e-0465-4049-88fb-b1c73b628a1d';
-  
+
   const messagePayload = {
-    "user_id": "user_id_của_bạn", // Thay bằng user_id của người nhận hoặc chat_id của nhóm
-    "msg_type": "text", // Chọn loại tin nhắn là văn bản
-    "content": {
-      "text": text,  // Nội dung văn bản bạn muốn gửi
-    },
+    user_id: 'user_id_của_bạn', // Thay bằng user_id của người nhận hoặc chat_id của nhóm
+    msg_type: 'text', // Chọn loại tin nhắn là văn bản
+    content: {
+      text: text // Nội dung văn bản bạn muốn gửi
+    }
   };
 
   const imagePayload = {
-    "user_id": "user_id_của_bạn", // Thay bằng user_id của người nhận hoặc chat_id của nhóm
-    "msg_type": "image",  // Tin nhắn loại hình ảnh
-    "content": {
-      "image_key": imageKey, // Thêm image_key vào tin nhắn hình ảnh
+    user_id: 'user_id_của_bạn', // Thay bằng user_id của người nhận hoặc chat_id của nhóm
+    msg_type: 'image', // Tin nhắn loại hình ảnh
+    content: {
+      image_key: imageKey // Thêm image_key vào tin nhắn hình ảnh
     }
   };
 
@@ -80,17 +80,17 @@ const sendImageAndTextMessage = async (APP_ACCESS_TOKEN, imageKey, text) => {
     // Gửi tin nhắn hình ảnh
     const imageResponse = await axios.post(sendMessageUrl, imagePayload, {
       headers: {
-        'Authorization': `Bearer ${APP_ACCESS_TOKEN}`,
+        Authorization: `Bearer ${APP_ACCESS_TOKEN}`,
         'Content-Type': 'application/json'
-      },
+      }
     });
 
     // Gửi tin nhắn văn bản
     const textResponse = await axios.post(sendMessageUrl, messagePayload, {
       headers: {
-        'Authorization': `Bearer ${APP_ACCESS_TOKEN}`,
+        Authorization: `Bearer ${APP_ACCESS_TOKEN}`,
         'Content-Type': 'application/json'
-      },
+      }
     });
 
     if (textResponse.data.code === 0 && imageResponse.data.code === 0) {
@@ -107,10 +107,10 @@ const sendImageAndTextMessage = async (APP_ACCESS_TOKEN, imageKey, text) => {
 const uploadAndSendImageAndText = async () => {
   const token = await getAppAccessToken();
   if (token) {
-    const imageKey = await uploadImage(token);  // Tải lên hình ảnh và lấy image_key
+    const imageKey = await uploadImage(token); // Tải lên hình ảnh và lấy image_key
     if (imageKey) {
-      const text = 'Report page: https://monumental-gingersnap-ec0aa5.netlify.app/';  // Văn bản bạn muốn gửi
-      await sendImageAndTextMessage(token, imageKey, text);  // Gửi tin nhắn chứa hình ảnh và văn bản
+      const text = 'Report page: https://monumental-gingersnap-ec0aa5.netlify.app/'; // Văn bản bạn muốn gửi
+      await sendImageAndTextMessage(token, imageKey, text); // Gửi tin nhắn chứa hình ảnh và văn bản
     }
   }
 };
@@ -127,10 +127,10 @@ const captureAndUploadScreenshot = async () => {
   await page.goto('https://monumental-gingersnap-ec0aa5.netlify.app/', { waitUntil: 'networkidle2' });
 
   // Chờ đến khi body xuất hiện
-  await page.waitForSelector('body'); 
+  await page.waitForSelector('body');
 
   // Chờ thêm 5 giây để đảm bảo dữ liệu đã được load hoàn toàn
-  await new Promise(resolve => setTimeout(resolve, 5000));
+  await new Promise((resolve) => setTimeout(resolve, 5000));
 
   // Chụp ảnh màn hình
   await page.screenshot({ path: 'netlify-page-screenshot.png', fullPage: true });
