@@ -1,8 +1,8 @@
 name: CI Pipeline
 
-# Sự kiện trigger pipeline
+# event trigger pipeline
 on:
-  workflow_dispatch:  # Cho phép trigger thủ công
+  workflow_dispatch:  # trigger manual
 
 jobs:
   Smoke:
@@ -21,23 +21,23 @@ jobs:
         run: npm install
 
       - name: Run test case
-        id: error  # Đặt ID cho bước này để tham chiếu đến sau
-        run: eval env=ci_chrome_stag npm run f L-01 || FAILED=true  # Lệnh chạy test, nếu lỗi thì tiếp tục
+        id: error 
+        run: eval env=ci_chrome_stag npm run f L-01 || FAILED=true 
 
       # - name: Send failure notification to Lark
-      #   if: failure()  # Chỉ chạy bước này khi job thất bại
-      #   run: node src/core/messageToLark.js "$ERROR_MESSAGE"  # Truyền lỗi vào thông báo
+      #   if: failure() 
+      #   run: node src/core/messageToLark.js "$ERROR_MESSAGE"
 
       - name: Upload test report
-        uses: actions/upload-artifact@v4  # Upload report làm artifact
+        uses: actions/upload-artifact@v4  
         with:
-          name: allure-results  # Tên artifact (có thể tuỳ chỉnh)
+          name: allure-results 
           path: reports/allure-results
           
 
   deploy_report:
     runs-on: self-hosted
-    needs: Smoke  # Chỉ chạy sau khi Smoke thành công
+    needs: Smoke 
 
     steps:
       - name: Checkout code
@@ -51,7 +51,7 @@ jobs:
       - name: Download test report
         uses: actions/download-artifact@v4
         with:
-          name: allure-results  # Tên của artifact đã upload
+          name: allure-results 
           path: reports/allure-results
 
       - name: Generate Allure Report
@@ -69,7 +69,7 @@ jobs:
 
   send_notifications_to_lark:
     runs-on: self-hosted
-    needs: [Smoke, deploy_report]  # Chỉ chạy sau khi Smoke và deploy_report thành công
+    needs: [Smoke, deploy_report]
 
     steps:
       - name: Checkout code
