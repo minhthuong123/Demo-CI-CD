@@ -205,7 +205,6 @@ exports.config = {
         reportedEnvironmentVars: {
           BROWSER: process.env.BROWSER,
           ENV: process.env.ENV
-          // 'TENANT': process.env.TENANT,
         }
       }
     ],
