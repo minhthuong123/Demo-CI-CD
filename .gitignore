@@ -1,4 +1,4 @@
-# Shared between .npmignore and .gitignore
+# Shared between .npm ignore and .gitignore
 .idea/
 .vscode/
 *.DS_Store
